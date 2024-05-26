@@ -2,8 +2,8 @@ import psycopg
 
 TOKEN = ''
 
-GROUP_ID = -1002128903514
-ADMIN = [6324087931]
+GROUP_ID: int 
+ADMIN: list = []
 
 HOST = ""
 DBNAME = ""
