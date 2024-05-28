@@ -165,3 +165,11 @@ async def about_us_kb(user_id):
 async def back_to_write_us_kb(user_id):
     back_btn = InlineKeyboardButton(text=await text_func(user_id, 'back_to_menu_kb'), callback_data='back_to_write_us')
     return InlineKeyboardMarkup(inline_keyboard=[[back_btn]])
+
+
+async def choose_address_kb(user_id, address):
+    kb = InlineKeyboardBuilder()
+    for button in address:
+        kb.add(InlineKeyboardButton(text=button, callback_data=f"my-{button}"))
+    kb.add(InlineKeyboardButton(text=await text_func(user_id, 'add_new_address_kb'), callback_data='add_new_address'))
+    return kb.adjust(1).as_markup()

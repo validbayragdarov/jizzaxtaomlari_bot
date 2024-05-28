@@ -33,6 +33,7 @@ def user_in_data(user_id):
 
 @router.message(CommandStart())
 async def start_cmd(message: Message):
+    print(message.chat.id)
     tg_id = message.from_user.id
     username = message.from_user.username
     if user_in_data(tg_id):
@@ -169,8 +170,4 @@ async def change_lang_func(callback: CallbackQuery):
                          reply_markup=await language_kb())
 
 
-@router.message()
-async def error_message(message: Message):
-    from config import TOKEN
-    bot = Bot(token=TOKEN)
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+

@@ -25,6 +25,7 @@ async def text_func(user_id, text):
             'item_name': 'Yiyecek',
             'price': 'Fiyat',
             'count': 'Adet',
+            'new_address_write': 'Yeni adresinizi yaziniz yada konum gonderiniz',
 
             'menu_kb': '🍽 Menü',
             'basket_kb': '🧺 Sepet',
@@ -43,7 +44,8 @@ async def text_func(user_id, text):
             'contact_kb': '📞 Numara',
             'change_lang_kb': '🏳️ Dil',
             'payment_cash_kb': '💵 Nakit',
-            'payment_card_kb': '💳 Banka kart'
+            'payment_card_kb': '💳 Banka kart',
+            'add_new_address_kb': 'Yeni adres ekle'
 
         },
         'e': {
@@ -61,6 +63,7 @@ async def text_func(user_id, text):
             'order_canceled': 'Your order was canceled, if you have any questions please write us',
             'order_accepted': 'Your order is accepted, wait our courier to contact you',
             'after_sign_up': 'You can now complete the order',
+            'new_address_write': 'Write new address or send location',
 
             'menu_kb': '🍽 Menu',
             'basket_kb': '🧺 Basket',
@@ -83,6 +86,7 @@ async def text_func(user_id, text):
             'item_name': 'Food',
             'price': 'Price',
             'count': 'Amount',
+            'add_new_address_kb': 'New address'
 
         },
 
@@ -101,6 +105,7 @@ async def text_func(user_id, text):
             'order_canceled': 'Ваш заказ был отменен, пожалуйста напишите нам если у вас возникли вопросы',
             'order_accepted': 'Ваш заказ был принят, ожидайте нашего курьера',
             'after_sign_up': 'Теперь вы можете завершить заказ',
+            'new_address_write': 'Напишите новый адресс или отправьте локацию',
 
             'menu_kb': '🍽 Меню',
             'basket_kb': '🧺 Корзина',
@@ -123,6 +128,7 @@ async def text_func(user_id, text):
             'item_name': 'Блюдо',
             'price': 'Цена',
             'count': 'Кол-во',
+            'add_new_address_kb': 'Новый адресс'
 
         },
 
@@ -141,6 +147,7 @@ async def text_func(user_id, text):
             'order_canceled': 'Buyurtmangiz bekor qilindi. Savollaringiz bo`lsa, bizga yozing.',
             'order_accepted': 'Buyurtmangiz qabul qilindi, iltimos bizning kurerimizni kuting',
             'after_sign_up': 'Endi siz buyurtmani bajarishingiz mumkin',
+            'new_address_write': 'Yangi adresni yozing yoki lokatsiyani jonating',
 
             'menu_kb': '🍽 Menu',
             'basket_kb': '🧺 Savatcha',
@@ -163,6 +170,7 @@ async def text_func(user_id, text):
             'item_name': 'Ismi',
             'price': 'Narx',
             'count': 'Miqdori',
+            'add_new_address_kb': 'Yangi adres'
 
         }}
     return lang[l][text]

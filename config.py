@@ -1,15 +1,15 @@
 import psycopg
 
-TOKEN = ''
+TOKEN = '7070307732:AAHECqiy1xYCtWtdf1nRXq_Vu0Zsz6148JM'
 
-GROUP_ID: int 
+GROUP_ID: int = -4198612438
 ADMIN: list = []
 
-HOST = ""
-DBNAME = ""
+HOST = "localhost"
+DBNAME = "testdb"
 USER = "postgres"
 PASSWORD = "root"
-PORT = 
+PORT = 5432
 
 db = psycopg.connect(host=HOST, dbname=DBNAME, user=USER, password=PASSWORD, port=PORT)
 db.autocommit = True

@@ -1,5 +1,5 @@
 from aiogram import Router, F, Bot
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
 from config import TOKEN
 from keyboards.keyboards import about_us_kb, back_to_write_us_kb
 
@@ -51,3 +51,10 @@ async def back_to_write_us_func(callback: CallbackQuery):
     await callback.message.answer(
         "📍 Katip Kasım, Mahallesi, Güvenlik Cd. No:14, 34130 Fatih/İstanbul\n📞 +902124582231",
         reply_markup=await about_us_kb(user_id))
+
+
+@router.message()
+async def error_message(message: Message):
+    from config import TOKEN
+    bot = Bot(token=TOKEN)
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)

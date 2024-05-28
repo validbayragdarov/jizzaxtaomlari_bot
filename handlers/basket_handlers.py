@@ -1,15 +1,17 @@
 from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
 from datetime import datetime
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
 from admin.keyboards import users_kb
-from db.db_basket_control import db_basket_get, db_basket_clear, db_basket_update, db_basket_get_items
+from db.db_basket_control import db_basket_get, db_basket_clear, db_basket_update, db_basket_get_items, \
+    db_basket_request
 from db.db_control import create_basket, update_userdata, get_userdata, get_all_userdata, get_db_for_admin
 from handlers.user_handlers import back_to_menu_func
-from keyboards.keyboards import basket_kb, change_in_basket_kb, registration_kb, complete_order_kb, payment_method_kb
+from keyboards.keyboards import basket_kb, change_in_basket_kb, registration_kb, complete_order_kb, payment_method_kb, \
+    choose_address_kb, get_location
 from handlers.menu_handlers import ChosenItem, menu_func
 from lexicon.lexicon import text_func
 from config import GROUP_ID, TOKEN, ADMIN, db
@@ -23,6 +25,10 @@ router.callback_query.filter(lambda x: x.from_user.id not in ADMIN)
 
 class PaymentMethod(StatesGroup):
     method = State()
+
+
+class AddNewAddress(StatesGroup):
+    address = State()
 
 
 def user_registered(user_id):
@@ -85,8 +91,50 @@ async def choose_payment_func(callback: CallbackQuery, state: FSMContext):
             await state.update_data(payment_method='💵 Наличка')
         case 'card':
             await state.update_data(payment_method='💳 Карта')
-    await callback.message.edit_text(await text_func(user_id, 'precomplete_order'),
-                                     reply_markup=await complete_order_kb(user_id))
+
+    address_request = await db_basket_request(f" SELECT address FROM user_data WHERE tg_id = {user_id} ")
+    address = []
+    show_adres = ''
+    for item in address_request:
+        address.append(item[0])
+        show_adres += f"{item[0]}\n"
+
+    await callback.message.edit_text(show_adres, reply_markup=await choose_address_kb(user_id, address))
+
+
+@router.callback_query(F.data == 'add_new_address')
+async def add_new_address_func(callback: CallbackQuery, state: FSMContext):
+    user_id = callback.from_user.id
+    await state.set_state(AddNewAddress.address)
+    await callback.message.answer(await text_func(user_id, 'new_address_write'),
+                                  reply_markup=await get_location(user_id))
+
+
+@router.message(AddNewAddress.address)
+async def adding_new_address(message: Message, state: FSMContext):
+    user_id = message.from_user.id
+    if message.text is None:
+
+        latitude = message.location.latitude
+        longitude = message.location.longitude
+
+        await update_userdata(user_id, latitude=latitude)
+        await update_userdata(user_id, longitude=longitude)
+        await update_userdata(user_id, address='location')
+    else:
+        await update_userdata(user_id, address=message.text)
+    order = await db_basket_get(user_id, 'item, price, count, time')
+    await message.answer(f"{order}\naddress = {message.text}\n {await text_func(user_id, 'precomplete_order')}",
+                         reply_markup=await complete_order_kb(user_id))
+
+
+@router.callback_query(lambda c: c.data.startswith('my-'))
+async def chose_old_address(callback: CallbackQuery):
+    user_id = callback.from_user.id
+    order = await db_basket_get(user_id, 'item, price, count, time')
+    await callback.message.edit_text(
+        f"{order}\naddress = {callback.data[3:]}\n {await text_func(user_id, 'precomplete_order')}",
+        reply_markup=await complete_order_kb(user_id))
 
 
 @router.callback_query(F.data == 'complete_order')

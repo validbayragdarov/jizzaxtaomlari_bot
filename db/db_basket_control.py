@@ -66,6 +66,11 @@ async def db_basket_get_items(user_id, item):
         cursor.execute(f""" SELECT {item} FROM "{await user_basket(user_id)}" """)
         return cursor.fetchall()
 
+async def db_basket_request(request):
+    with db.cursor() as cursor:
+        cursor.execute(f""" {request} """)
+        return cursor.fetchall()
+
 
 async def show_orders(user_id, order_count):
     show_order = ''
