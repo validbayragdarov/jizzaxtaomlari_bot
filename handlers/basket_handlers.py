@@ -1,6 +1,7 @@
+import aiogram.types
 from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 from datetime import datetime
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
@@ -104,6 +105,7 @@ async def choose_payment_func(callback: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == 'add_new_address')
 async def add_new_address_func(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
     user_id = callback.from_user.id
     await state.set_state(AddNewAddress.address)
     await callback.message.answer(await text_func(user_id, 'new_address_write'),
@@ -123,6 +125,8 @@ async def adding_new_address(message: Message, state: FSMContext):
         await update_userdata(user_id, address='location')
     else:
         await update_userdata(user_id, address=message.text)
+    await message.answer(f"adres: {message.text if message.text is not None else 'location'}",
+                         reply_markup=ReplyKeyboardRemove())
     order = await db_basket_get(user_id, 'item, price, count, time')
     await message.answer(f"{order}\naddress = {message.text}\n {await text_func(user_id, 'precomplete_order')}",
                          reply_markup=await complete_order_kb(user_id))
@@ -130,6 +134,9 @@ async def adding_new_address(message: Message, state: FSMContext):
 
 @router.callback_query(lambda c: c.data.startswith('my-'))
 async def chose_old_address(callback: CallbackQuery):
+    await callback.answer()
+    await callback.message.answer(f"adres: {callback.data[3:] if callback.data[3:] is not None else 'location'}",
+                                  reply_markup=ReplyKeyboardRemove())
     user_id = callback.from_user.id
     order = await db_basket_get(user_id, 'item, price, count, time')
     await callback.message.edit_text(
