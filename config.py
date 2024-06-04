@@ -2,7 +2,7 @@ import psycopg
 
 TOKEN = ''
 
-GROUP_ID: int = -4198612438
+GROUP_ID: int = 
 ADMIN: list = []
 
 HOST = "localhost"
