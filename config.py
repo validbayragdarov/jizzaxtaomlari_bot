@@ -1,6 +1,6 @@
 import psycopg
 
-TOKEN = '7070307732:AAHECqiy1xYCtWtdf1nRXq_Vu0Zsz6148JM'
+TOKEN = ''
 
 GROUP_ID: int = -4198612438
 ADMIN: list = []
